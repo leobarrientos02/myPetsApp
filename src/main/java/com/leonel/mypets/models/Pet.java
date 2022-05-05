@@ -30,11 +30,30 @@ public class Pet implements Serializable {
     @Column
     private String imageUrl;
 
-    @Column
-    private Integer userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
 
    public Pet(){
    }
+
+    public Pet(String name, String description, String type, String breed, String gender, String imageUrl) {
+        this.name = name;
+        this.description = description;
+        this.type = type;
+        this.breed = breed;
+        this.gender = gender;
+        this.imageUrl = imageUrl;
+    }
+
+    public Pet(User user, String name, String description, String type, String breed, String gender, String imageUrl){
+       this.user = user;
+        this.name = name;
+        this.description = description;
+        this.type = type;
+        this.breed = breed;
+        this.gender = gender;
+        this.imageUrl = imageUrl;
+    }
 
     public Integer getId() {
         return id;
@@ -92,11 +111,11 @@ public class Pet implements Serializable {
         this.imageUrl = imageUrl;
     }
 
-    public Integer getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 }

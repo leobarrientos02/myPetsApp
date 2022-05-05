@@ -2,6 +2,7 @@ package com.leonel.mypets.models;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.LinkedList;
 import java.util.List;
 
 @Entity
@@ -27,12 +28,16 @@ public class User implements Serializable {
     @Column
     private String imageUrl;
 
+    @Column
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Pet> pets;
+
     public User(){
 
     }
 
-    public User(Integer id, String username, String password, String firstName, String lastName, String imageUrl) {
-        this.id = id;
+    public User(String username, String password, String firstName, String lastName, String imageUrl) {
+        this.pets = new LinkedList<>();
         this.username = username;
         this.password = password;
         this.firstName = firstName;
@@ -88,5 +93,12 @@ public class User implements Serializable {
         this.imageUrl = imageUrl;
     }
 
+    public void addPet(Pet pet) {
+        this.pets.add(pet);
+    }
+
+    public void removeTask(Pet pet) {
+        this.pets.remove(pet);
+    }
 
 }
