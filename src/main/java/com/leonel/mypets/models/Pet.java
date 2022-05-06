@@ -2,7 +2,6 @@ package com.leonel.mypets.models;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.sql.Blob;
 
 @Entity
 @Table(name = "pets")

@@ -1,7 +1,6 @@
 package com.leonel.mypets.repositories;
 
 import com.leonel.mypets.models.Pet;
-import com.leonel.mypets.models.User;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -25,14 +24,14 @@ public class PetRepo implements HibernateRepo<Pet> {
 
     @Override
     public List<Pet> getAll() {
-        String hql = "From pets";
+        String hql = "From Pet";
         TypedQuery<Pet> query = session.createQuery(hql);
         return query.getResultList();
     }
 
     @Override
     public Pet getById(Integer id) {
-        String hql = "FROM pets WHERE id = :id";
+        String hql = "FROM Pet WHERE id = :id";
         TypedQuery<Pet> query = session.createQuery(hql);
         query.setParameter("id", id);
         return query.getSingleResult();
