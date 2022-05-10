@@ -1,10 +1,15 @@
-package com.leonel.mypets.repositories;
+package com.leonel.mypets.beans.repositories;
 
+import com.leonel.mypets.beans.services.StorageManager;
 import com.leonel.mypets.models.User;
+
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.query.NativeQuery;
 import org.hibernate.query.Query;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Repository;
+
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -12,16 +17,19 @@ import javax.persistence.criteria.Root;
 import java.util.LinkedList;
 import java.util.List;
 
-import static antlr.build.ANTLR.root;
 
+@Repository
 public class UserRepo implements HibernateRepo<User> {
 
+    private final StorageManager storageManager;
+    private boolean running = false;
     public Session session;
-    String tableName;
+    private String tableName;
 
-    public UserRepo(Session session){
-        this.session = session;
-        this.tableName = "users";
+    @Autowired
+    public UserRepo(StorageManager storageManager){
+        this.storageManager = storageManager;
+//        this.tableName = "users";
     }
 
     @Override
@@ -62,6 +70,29 @@ public class UserRepo implements HibernateRepo<User> {
         return user;
     }
 
+    @Override
+    public void delete(User user){
+        Transaction tx = session.beginTransaction();
+        session.delete(user);
+        tx.commit();
+    }
+
+    @Override
+    public void start() {
+        this.session = storageManager.getSession();
+        running = true;
+    }
+
+    @Override
+    public void stop() {
+        running = false;
+    }
+
+    @Override
+    public boolean isRunning() {
+        return running;
+    }
+
     public User getByUsername(String username){
         CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
         CriteriaQuery<User> query = criteriaBuilder.createQuery(User.class);
@@ -70,5 +101,10 @@ public class UserRepo implements HibernateRepo<User> {
         query.select(userTable).where(criteriaBuilder.equal(userTable.get("username"), username));
 
         return session.createQuery(query).getSingleResult();
+    }
+
+    @Value("users")
+    public void setTableName(String tableName){
+        this.tableName = tableName;
     }
 }

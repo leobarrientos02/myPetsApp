@@ -97,7 +97,7 @@ public class User implements Serializable {
         this.pets.add(pet);
     }
 
-    public void removeTask(Pet pet) {
+    public void removePet(Pet pet) {
         this.pets.remove(pet);
     }
 
